@@ -79,50 +79,17 @@
     </div>
     <footer>Designed for book lovers everywhere, this chatbot was created by Grace Morgan, powered by DigitalOcean's GenAI Platform. Helping you discover your next great read, one recommendation at a time.</footer>
 
-    <!-- Chatbot Embed -->
-    <div class="chat-widget-container" id="chat-widget-container"></div>
-
-    <script>
-        function sendMessage() {
-            let userInput = document.getElementById("user-input").value;
-            let chatBox = document.getElementById("chat-box");
-            if (userInput.trim() === "") return;
-            
-            chatBox.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
-            document.getElementById("user-input").value = "";
-            
-            setTimeout(() => {
-                let botResponse = getBotResponse(userInput);
-                chatBox.innerHTML += `<div><strong>🪄:</strong> ${botResponse}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1000);
-        }
-
-        function getBotResponse(input) {
-            let responses = {
-                "recommend a book": "How about 'The Hitchhiker's Guide to the Galaxy'? Witty, weird, and full of wisdom!",
-                "favorite book": "Tough one! But 'Pride and Prejudice' has some top-tier drama.",
-                "best fantasy novel": "You can't go wrong with 'The Lord of the Rings.' Elves, wizards, and long walks!",
-                "who wrote 1984?": "George Orwell. Big Brother is watching, and so am I!"
-            };
-            return responses[input.toLowerCase()] || "Hmm, that’s a good question. Try something else?";
-        }
-
-        // Embedding the chatbot widget into the designated container
-        window.onload = function() {
-            var script = document.createElement("script");
-            script.src = "https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/static/chatbot/widget.js";
-            script.async = true;
-            script.setAttribute('data-agent-id', '810d5597-e830-11ef-bf8f-4e013e2ddde4');
-            script.setAttribute('data-chatbot-id', '3FdnLZtpJnYqNyWh2xRwUPnSqxYbzDqy');
-            script.setAttribute('data-name', '🪄 Chatbot');
-            script.setAttribute('data-primary-color', '#031B4E');
-            script.setAttribute('data-secondary-color', '#E5E8ED');
-            script.setAttribute('data-button-background-color', '#0061EB');
-            script.setAttribute('data-starting-message', 'Hello! How can I help you today?');
-            script.setAttribute('data-logo', '/static/chatbot/icons/default-agent.svg');
-            document.getElementById("chat-widget-container").appendChild(script);
-        };
+    <!-- Embed DigitalOcean GenAI chatbot -->
+    <script async
+      src="https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/static/chatbot/widget.js"
+      data-agent-id="810d5597-e830-11ef-bf8f-4e013e2ddde4"
+      data-chatbot-id="3FdnLZtpJnYqNyWh2xRwUPnSqxYbzDqy"
+      data-name="book-rec-agent Chatbot"
+      data-primary-color="#031B4E"
+      data-secondary-color="#E5E8ED"
+      data-button-background-color="#0061EB"
+      data-starting-message="Hello! How can I help you today?"
+      data-logo="/static/chatbot/icons/default-agent.svg">
     </script>
 </body>
 </html>
