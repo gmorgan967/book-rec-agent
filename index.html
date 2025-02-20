@@ -26,6 +26,7 @@
             border: 1px solid #ddd;
             padding: 10px;
             background: #fff;
+            text-align: left;
         }
         #user-input {
             width: 80%;
@@ -46,21 +47,33 @@
     </style>
 </head>
 <body>
-    <h1>Book Recommendation Agent</h1>
-    <h2>Your AI-Powered Book Suggestion Assistant</h2>
+    <h1>Shelf-Help: Your Book Recommendation Agent</h1>
+    <h2>Struggling to pick your next read? Let me help you find the perfect book—whether you’re in the mood for swoony romance, thrilling mysteries, epic fantasy, or something in between.</h2>
     <div id="chat-container">
         <div id="chat-box"></div>
         <input type="text" id="user-input" placeholder="Ask for book recommendations...">
         <button id="send-btn">Send</button>
     </div>
     <footer>
-        Powered by DigitalOcean GenAI Platform
+        Designed for book lovers everywhere, this agent was created by Grace Morgan using DigitalOcean's GenAI Platform.
     </footer>
 
     <script>
         const chatBox = document.getElementById("chat-box");
         const userInput = document.getElementById("user-input");
         const sendBtn = document.getElementById("send-btn");
+
+        function formatResponse(responseText) {
+            return responseText.replace(/\n/g, '<br>')
+                .replace(/📖 Title:/g, '<br><strong>📖 Title:</strong>')
+                .replace(/📅 Year Published:/g, '<br><strong>📅 Year Published:</strong>')
+                .replace(/📚 Genre:/g, '<br><strong>📚 Genre:</strong>')
+                .replace(/📄 Page Count:/g, '<br><strong>📄 Page Count:</strong>')
+                .replace(/⭐ Goodreads Rating:/g, '<br><strong>⭐ Goodreads Rating:</strong>')
+                .replace(/✨ Summary:/g, '<br><strong>✨ Summary:</strong>')
+                .replace(/⚠️ Trigger Warnings:/g, '<br><strong>⚠️ Trigger Warnings:</strong>')
+                .replace(/🌶️ Spice Level:/g, '<br><strong>🌶️ Spice Level:</strong>');
+        }
 
         async function sendMessage() {
             const userMessage = userInput.value.trim();
@@ -89,7 +102,7 @@
                 const data = await response.json();
 
                 if (data && data.choices && data.choices.length > 0) {
-                    chatBox.innerHTML += `<p><strong>Agent:</strong> ${data.choices[0].message.content}</p>`;
+                    chatBox.innerHTML += `<p><strong>Agent:</strong> ${formatResponse(data.choices[0].message.content)}</p>`;
                 } else {
                     chatBox.innerHTML += `<p><strong>Agent:</strong> Sorry, I couldn't generate a response.</p>`;
                 }
