@@ -46,15 +46,15 @@
     </style>
 </head>
 <body>
-    <h1>Shelf-help: Your TBR List Navigator</h1>
-    <h2>Struggling to pick your next read? Let me help you find the perfect book—whether you’re in the mood for swoony romance, thrilling mysteries, epic fantasy, or something in between.</h2>
+    <h1>Book Recommendation Agent</h1>
+    <h2>Your AI-Powered Book Suggestion Assistant</h2>
     <div id="chat-container">
         <div id="chat-box"></div>
         <input type="text" id="user-input" placeholder="Ask for book recommendations...">
         <button id="send-btn">Send</button>
     </div>
     <footer>
-        Designed for book lovers everywhere, this agent was created by Grace Morgan, powered by DigitalOcean's GenAI Platform. Helping you discover your next great read, one recommendation at a time.
+        Powered by DigitalOcean GenAI Platform
     </footer>
 
     <script>
@@ -63,26 +63,44 @@
         const sendBtn = document.getElementById("send-btn");
 
         async function sendMessage() {
-            const userMessage = userInput.value;
+            const userMessage = userInput.value.trim();
             if (!userMessage) return;
-            
+
             chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
             userInput.value = "";
-            
-            const response = await fetch("https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/api/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer NNwSlvSe95AstPlZJwFsnMv5gXmmxqAu"
-                },
-                body: JSON.stringify({ chatbot_id: "3FdnLZtpJnYqNyWh2xRwUPnSqxYbzDqy", message: userMessage })
-            });
-            
-            const data = await response.json();
-            chatBox.innerHTML += `<p><strong>Agent:</strong> ${data.reply}</p>`;
+
+            try {
+                const response = await fetch("https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer NNwSlvSe95AstPlZJwFsnMv5gXmmxqAu"
+                    },
+                    body: JSON.stringify({
+                        chatbot_id: "3FdnLZtpJnYqNyWh2xRwUPnSqxYbzDqy",
+                        messages: [{ role: "user", content: userMessage }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && data.choices && data.choices.length > 0) {
+                    chatBox.innerHTML += `<p><strong>Agent:</strong> ${data.choices[0].message.content}</p>`;
+                } else {
+                    chatBox.innerHTML += `<p><strong>Agent:</strong> Sorry, I couldn't generate a response.</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching response:", error);
+                chatBox.innerHTML += `<p><strong>Agent:</strong> Error communicating with the agent.</p>`;
+            }
+
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-        
+
         sendBtn.addEventListener("click", sendMessage);
         userInput.addEventListener("keypress", function(event) {
             if (event.key === "Enter") sendMessage();
