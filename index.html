@@ -26,7 +26,6 @@
             border: 1px solid #ddd;
             padding: 10px;
             background: #fff;
-            text-align: left;
         }
         #user-input {
             width: 80%;
@@ -39,6 +38,12 @@
             border: none;
             cursor: pointer;
         }
+        #loading {
+            display: none;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
         footer {
             margin-top: 20px;
             font-size: 0.8em;
@@ -47,35 +52,36 @@
     </style>
 </head>
 <body>
-    <h1>Shelf-Help: Your Book Recommendation Agent</h1>
-    <h2>Struggling to pick your next read? Let me help you find the perfect book—whether you’re in the mood for swoony romance, thrilling mysteries, epic fantasy, or something in between.</h2>
+    <h1>Book Recommendation Agent</h1>
+    <h2>Your AI-Powered Book Suggestion Assistant</h2>
     <div id="chat-container">
         <div id="chat-box"></div>
-        <p id="loading" style="display: none; color: gray;">Response loading...</p>
         <input type="text" id="user-input" placeholder="Ask for book recommendations...">
         <button id="send-btn">Send</button>
+        <p id="loading">Book recommendation librarian is loading...</p>
     </div>
     <footer>
-        Designed for book lovers everywhere, this agent was created by Grace Morgan using DigitalOcean's GenAI Platform.
+        Powered by DigitalOcean GenAI Platform
     </footer>
+
+    <!-- Embedded Chat Widget Script -->
+    <script async
+      src="https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/static/chatbot/widget.js"
+      data-agent-id="810d5597-e830-11ef-bf8f-4e013e2ddde4"
+      data-chatbot-id="3FdnLZtpJnYqNyWh2xRwUPnSqxYbzDqy"
+      data-name="book-rec-agent Chatbot"
+      data-primary-color="#031B4E"
+      data-secondary-color="#E5E8ED"
+      data-button-background-color="#0061EB"
+      data-starting-message="Hello! How can I help you today?"
+      data-logo="/static/chatbot/icons/default-agent.svg">
+    </script>
 
     <script>
         const chatBox = document.getElementById("chat-box");
         const userInput = document.getElementById("user-input");
         const sendBtn = document.getElementById("send-btn");
-        const loadingText = document.getElementById("loading");
-
-        function formatResponse(responseText) {
-            return responseText.replace(/\n/g, '<br>')
-                .replace(/📖 Title:/g, '<br><strong>📖 Title:</strong>')
-                .replace(/📅 Year Published:/g, '<br><strong>📅 Year Published:</strong>')
-                .replace(/📚 Genre:/g, '<br><strong>📚 Genre:</strong>')
-                .replace(/📄 Page Count:/g, '<br><strong>📄 Page Count:</strong>')
-                .replace(/⭐ Goodreads Rating:/g, '<br><strong>⭐ Goodreads Rating:</strong>')
-                .replace(/✨ Summary:/g, '<br><strong>✨ Summary:</strong>')
-                .replace(/⚠️ Trigger Warnings:/g, '<br><strong>⚠️ Trigger Warnings:</strong>')
-                .replace(/🌶️ Spice Level:/g, '<br><strong>🌶️ Spice Level:</strong>');
-        }
+        const loading = document.getElementById("loading");
 
         async function sendMessage() {
             const userMessage = userInput.value.trim();
@@ -83,7 +89,7 @@
 
             chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
             userInput.value = "";
-            loadingText.style.display = "block";
+            loading.style.display = "block";
 
             try {
                 const response = await fetch("https://agent-12f68e1363e3d2f15269-9bcnf.ondigitalocean.app/api/v1/chat/completions", {
@@ -105,16 +111,16 @@
                 const data = await response.json();
 
                 if (data && data.choices && data.choices.length > 0) {
-                    chatBox.innerHTML += `<p><strong>🪄:</strong> ${formatResponse(data.choices[0].message.content)}</p>`;
+                    chatBox.innerHTML += `<p><strong>🪄:</strong> ${data.choices[0].message.content}</p>`;
                 } else {
                     chatBox.innerHTML += `<p><strong>🪄:</strong> Sorry, I couldn't generate a response.</p>`;
                 }
             } catch (error) {
                 console.error("Error fetching response:", error);
-                chatBox.innerHTML += `<p><strong>🪄:</strong> Error communicating with the agent.</p>`;
+                chatBox.innerHTML += `<p><strong>🪄:</strong> Error communicating with the librarian.</p>`;
             }
 
-            loadingText.style.display = "none";
+            loading.style.display = "none";
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
